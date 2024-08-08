@@ -23,10 +23,10 @@ pipeline {
             steps {
                 script {
                     gv.buildImage()
-                    withCredentials([usernamePassword(credentialsId:'dockerhub-cred',passwordVariable:'Pass',usernameVariable:'User')]) {
-                        sh "docker build -t vidhi2002/my-repo:jma-2.0 ."
-                        sh "echo $Pass | docker login -u $User --password-stdin"
-                        sh "docker push vidhi2002/my-repo:jma-2.0"
+                    withCredentials([usernamePassword(credentialsId:'dockerhub-cred',passwordVariable:'PASS',usernameVariable:'USER')]) {
+                        sh 'docker build -t vidhi2002/my-repo:jma-2.0 . '
+                        sh "echo $PASS | docker login -u $USER --password-stdin"
+                        sh 'docker push vidhi2002/my-repo:jma-2.0'
                     }
                 }
             }
