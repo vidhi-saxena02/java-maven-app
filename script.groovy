@@ -11,4 +11,12 @@ def deployApp() {
     echo "deploying version ${params.VERSION}"
 } 
 
+def buildJar() {
+    echo 'building the jar...'
+}
+
+def buildImage() {
+    echo 'building the image...'
+}
+
 return this

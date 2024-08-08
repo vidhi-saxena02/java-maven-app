@@ -1,10 +1,7 @@
-def gv
-
 pipeline {
     agent any
-    parameters {
-        choice(name: 'VERSION', choices: ['1.1.0', '1.2.0', '1.3.0'], description: '')
-        booleanParam(name: 'executeTests', defaultValue: true, description: '')
+    tools {
+        maven 'Maven'
     }
     stages {
         stage("init") {
@@ -14,10 +11,23 @@ pipeline {
                 }
             }
         }
-        stage("build") {
+        stage("build jar") {
             steps {
                 script {
-                    gv.buildApp()
+                    gv.buildJar()
+                    sh "mvn package"
+                }
+            }
+        }
+        stage("build image") {
+            steps {
+                script {
+                    gv.buildImage()
+                    withCredentials([usernamePassword(credentialsId:'dockerhub-cred',passwordVariable:'Pass',usernameVariable:'User')]) {
+                        sh "docker build -t vidhi2002/my-repo:jma-2.0 ."
+                        sh "echo $Pass | docker login -u $User --password-stdin"
+                        sh "docker push vidhi2002/my-repo:jma-2.0"
+                    }
                 }
             }
         }
